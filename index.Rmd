@@ -26,7 +26,7 @@ The world is awash in complex predictive tools and analytics. Some of these tool
 
 This is a beginner's guide to predictive analytics. It introduces a few simple model workflows and basic concepts to users who have little or no background working with statistics and/or computer coding. It is NOT a comprehensive text on regression models. Such texts are many in number, but if you want to get into one - I quite like [Regression and other Stories, by Gelman et al](https://avehtari.github.io/ROS-Examples/examples.html#Introduction).
 
-Each section in this document details a different regression model we will use this semester in Land Use and Environmental Modeling (CPLN 6750 and the University of Pennsylvania Weitzman School of Design), and provides simple workflows in R using sample data sets.
+This document details regression models we will use this semester in Land Use and Environmental Modeling (CPLN 6750 and the University of Pennsylvania Weitzman School of Design), and provides basic workflows using sample data sets.
 
 **The learning objectives are as follows:**
 
@@ -74,7 +74,7 @@ as.data.frame(cbind(c("OLS", "Logit", "Poisson"), c("Continuous", "Binary", "Cou
 
 ## 1.3. How Do Predictive Models "Work?"
 
-All of these models are built around a simple framework - making a sort of "best fit" line through your data. You've certainly seen an x-y scatterplot with a "best fit" line plotted through the middle. This is actually a simple regression model - an OLS model fits a function that predicts the value of Y for a given X. Functionally, it minimizes the distance between the observations (the error) and the best fit line.
+These models are built around a simple framework - making a "best fit" line through your data. You've certainly seen an x-y scatterplot with a fitted line plotted through the middle. This is actually a simple regression model. Our models fit functions that predict the value of Y for a given X. Functionally, it minimizes the distance between the observations (the error) and the best fit line.
 
 ```{r message=FALSE, echo=FALSE}
 
@@ -98,7 +98,7 @@ ggplot(data, aes(x = x, y = y)) +
 
 ```
 
-Each of the models in this text apply a different fitted function to your data, but in the end, the predictive functionality is similar - they all output the "average" estimate given all the independent variables in the model.
+Each of the models in this text apply a different fitted function to your data, but in the end, the predictive functionality is similar - they all output the "average" estimate given all the independent predictor variables in the model.
 
 ## 1.4 How Do You Assess Model Performance?
 
@@ -147,13 +147,13 @@ library(plotROC)
 
 # 2. Ordinary Least Squares Linear Regression
 
-OLS regression, or multiple linear regression, is a simple model that can estimate the value of a continuous outcome - like prices or quantities. It's not good for count data, like numbers of incidents. It is simple, interpretable, and widespread. You have almost certainly seen this kind of model in a two-variable scenario, where a line is fitted to a cloud of points. Imagine a multi-dimensional cloud of points with a fitted line - that's essentially what multiple linear regression does.
+OLS regression, or multiple linear regression, is a simple model that can estimate the value of a continuous outcome - like prices or quantities. It is simple, interpretable, and widespread. You have almost certainly seen this kind of model in a two-variable scenario, where a line is fitted to a cloud of points (like in the last section). Imagine a multi-dimensional cloud of points with a fitted line - that's essentially what multiple linear regression does.
 
 ## 2.1. Data set
 
-We are going to use a [data set from the World Bank](https://www.kaggle.com/datasets/patelris/crop-yield-prediction-dataset?select=yield.csv) to see if we can predict national crop yields. This data set consists of agricultural yields for many types of crops in over 100 countries over a series of years. There is accompanying info about yearly rainfall and temperature. I have cleaned these data a bit to consist only of a few years. 
+We are going to use a [data set from the World Bank](https://www.kaggle.com/datasets/patelris/crop-yield-prediction-dataset?select=yield.csv) to see if we can predict national crop yields. This data set consists of agricultural yields for many types of crops in over 100 countries. There is accompanying info about yearly rainfall and temperature. I have cleaned these data a bit to consist only of a few years. 
 
-Let's say we are interested in food system planning, and we want to be able to predict the yield (weight per hectre) for several crop types - maize, wheat, etc., under several scenarios for the coming year related to rainfall and temperature - a hot year, a rainy year, etc.,
+Let's say we are interested in food system planning, and we want to be able to predict the yield (weight per hectre) for several crop types - maize, wheat, etc.,
 
 We can load our data from a URL where it is hosted on github:
 
@@ -167,7 +167,7 @@ The first step is always to do a few quick pieces of exploratory data analysis -
 
 ### 2.2.1. Data types
 
-The `glimpse` command from `dplyr` in the `tidyverse` is the best way to quickly get a look at your data. Here we see that we have rows that have a column id, a country, a crop type, a year, yield per hectare (our continuous dependent variable - `yield_hg_per_ha`)
+The `glimpse` command from `dplyr` in the `tidyverse` is the best way to quickly look at your data. Here we see that we have rows that have a column id, a country, a crop type, a year, yield per hectare (our continuous dependent variable - `yield_hg_per_ha`)
 
 ```{r}
 glimpse(yield_df)
@@ -214,7 +214,9 @@ yield_df %>%
 
 The Pearson's product-moment correlation, aka "Pearson's R" is a simple test of correlation between two continuous variables. It runs between -1 (strong negative correlation), and 1 (strong positive). A Pearson's R of 0 would mean no relationship.
 
-Let's look at the Pearson's R between our yield and pesticide application - it's pretty small - 0.05 is the "sample estimate" we see in the output from the `cor.test` function to calculate Pearson's R.
+Let's look at the Pearson's R between our yield and pesticide application - it's pretty small - 0.05 is the Pearson's R estimate we see in the output from the `cor.test` function.
+
+`cor.test` takes two arguments - two columns from our data set.
 
 ```{r}
 
@@ -244,7 +246,7 @@ yield_df %>%
 
 ## 2.3. A Simple Model
 
-Here's a simple example so we can take a look at our modeling outputs. Le's start by predicting yield using only rain fall, temperature and the amount of pesticides. Look at the following code chunk to see how we do this with the `lm` function.
+Here's a simple example so we can take a look at our modeling outputs. Let's start by predicting yield using only rain fall, temperature and the amount of pesticides. Look at the following code chunk to see how we do this with the `lm` function.
 
 The `lm` function takes a data set (`yield_df`), and an equation with a dependent variable (`yield_hg_per_ha`) followed by a `~` (called a "tilda").  You list the independent variables on the other side of the tilda.
 
@@ -263,7 +265,7 @@ The model summary shows us a lot of information. Let's just focus on a three ite
 
 **The beta coefficients aka `Estimate`** - these show the strength (big or small) and the direction (positive or negative) of the relationship between an independent variable and our dependent variable (yield) given the other variables in the model. Here is an example of how they are interpreted using technical language. "On average, a one unit increase in `average_rain_fall_mm_per_year` is associated with a 5.335 unit increase in `yield_hg_per_ha`, all else equal."
 
-**The p-value `Pr(>|t|)`** represents the probability that this estimate is significantly different from zero (e.g. how much confidence do we have in the coefficient). A low p-value means a relatively high confidence in the estimate. Here it is `0.0773` - this is very low, but not low enough to show significance of the relationship in the eyes of, say, a medical journal reviewer. For our purposes though, a 7% chance the estimate is invalid, that's means there's a good chance this is a useful relationship for prediction.
+**The p-value `Pr(>|t|)`** represents the probability that this estimate is significantly different from zero (e.g. how much confidence do we have in the coefficient). A low p-value means a relatively high confidence in the estimate. Here it is `0.0773` - this is low, but not low enough to show significance of the relationship in the eyes of a medical journal reviewer. For our purposes, a 7% chance the estimate is invalid (aka a 93% chance it's valid), means it might be useful predictor.
 
 The **R-Squared** value tells us the amount of variance in the dependent variable that is explained by this combination of independent variables. This isn't the same as an "accurate" model, but higher values generally relate to more powerful predictive models. Here, the value is 0.02 (on a scale of 0-1) - which is horrible.
 
@@ -274,33 +276,33 @@ summary(reg1)
 
 **Do we care about the beta coefficients, the p-values and the R-squared?** 
 
-Only a little bit - but nowhere close to as much as most people do when they use regression. We want to know whether these variables in this model predict yields well - we don't care about explaining their effects in isolation. We can use these as diagnostics as we are building our model - adding features and engineering new ones. The real metrics we care about are discussed later.
+Only a little bit. We want to know whether these variables in this model predict yields well - we don't care about explaining their effects in isolation. We can use the magnitude, directionality, and significance of our coefficients as diagnostics as we are building our model - adding features and engineering new ones. The real metrics we care about are prediction errors - which we discuss a bit later.
 
 ## 2.4. Fixed Effects
 
-It would stand to reason that the model "knowing" what country and crop type you're predicting yields for would help. Some countries are probably easier than other to grow crops. Our exploratory analysis told us that yields vary a lot across crop and country.
+It would stand to reason that the model "knowing" what country and crop type you're predicting would help. Some countries are probably easier than other to grow certain kinds of crops. Our exploratory analysis told us that yields vary a lot across crop and country.
 
-Let's add these "categorical" variables to our model.
+Let's add a "categorical" variable to our model - `Item` - aka crop type.
 
 When you add a categorical variable, like country (the variable `Area`), it's known as a "fixed effect" or a "dummy variable" - where each category is given it's own line item in the regression summary, complete with an estimate. One level of the fixed effect is not represented in the summary - so there's one country you don't see here. Each estimate and p-value relates to that "base case" hold out.
 
-Let's create a new regression, called `reg2`. In this regression - each coefficient represents the unit change in crop yield associated with being in Algeria relative to being in Albania (the hold out country), or the yield associated with Maize relative to Cassava.
+Let's create a new regression, called `reg2`. In this regression - each coefficient represents the unit change in crop yield associated with being Maize relative to being in Cassava (the hold out category).
 
-Adding these fixed effects made our R-Squared go wayyyy up - if we know the rainfall, country, crop and pesticide application, we can explain almost 80% of the variance in crop yields. Pretty good - but not quite a prediction.
+Adding this fixed effects made our R-Squared go wayyyy up - if we know the rainfall, crop and pesticide application, we can explain almost 60% of the variance in crop yields. Pretty good - but again - R-squared is not the metric we care about the most.
 
 ```{r}
 
 reg2 <- lm(data = yield_df, 
            yield_hg_per_ha ~ 
-             average_rain_fall_mm_per_year + avg_temp + pesticides_tonnes + Item + Area)
+             average_rain_fall_mm_per_year + avg_temp + pesticides_tonnes + Item)
 
 summary(reg2)
 
 ```
 
-Let's try a different approach - we saw there is a very strong relationship between yield and `yield_last_year` - what if we took the country out of the model, and put this in.... wow. That's a very strong predictor and a very high R-squared.
+We saw there is a very strong relationship between yield and `yield_last_year` - what if we took the country out of the model, and put this in.... wow. That's a very strong predictor and a very high R-squared.
 
-You can see that it basically knocks rainfall, temperature and pesticides out of the model in terms of significance (p-values). This is because these things are "multi-colinear" - a sign that the coefficient values are not very reliable when these variables are in the model together. This is a major way that prediction and explanation are very different when you use OLS models - we are violating some important stats assumtions.
+You can see that it knocks rainfall, temperature and pesticides out of the model in terms of significance (p-values). This is because these things are "co-linear" with `yield_last_year`. Co-linearity is a sign that the coefficient values are not very reliable when these variables are in the model together. This is a major way that prediction and explanation are very different when you use OLS models - we are violating some important statistical assumptions in exchange for predictive ability.
 
 ```{r}
 

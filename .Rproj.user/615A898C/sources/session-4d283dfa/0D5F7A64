@@ -3,7 +3,7 @@
     "path": "~/GitHub/applied_predictive_modeling/index.Rmd",
     "project_path": "index.Rmd",
     "type": "r_markdown",
-    "hash": "2878264357",
+    "hash": "1648823685",
     "contents": "",
     "dirty": false,
     "created": 1739818483003.0,
@@ -12,16 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "149,436",
-        "scrollLine": "148",
+        "cursorPosition": "248,74",
+        "scrollLine": "245",
         "last_setup_crc32": "4d283dfa768d2bb0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1739820381,
+    "lastKnownWriteTime": 1739828981,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1739820381627,
+    "last_content_update": 1739828982119,
     "read_only": false,
     "read_only_alternatives": []
 }
