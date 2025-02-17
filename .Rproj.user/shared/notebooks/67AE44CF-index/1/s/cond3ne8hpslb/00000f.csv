@@ -1,0 +1,5 @@
+"0","trees <- read_csv (""https://raw.githubusercontent.com/mafichman/applied_predictive_modeling/refs/heads/main/data/tree_morbidity.csv"") %>%"
+"0","  filter(is.na(Event)== FALSE) %>%"
+"0","  mutate(Species = as.factor(Species),"
+"0","         Event = as.factor(Event))"
+"0",""

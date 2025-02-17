@@ -1,0 +1,4 @@
+"0",""
+"0","reg_logit <- glm(data = trees , "
+"0","                 Event ~ Light_ISF + NSC + Lignin + Phenolics + Species + Soil,"
+"0","                 family=""binomial"")"

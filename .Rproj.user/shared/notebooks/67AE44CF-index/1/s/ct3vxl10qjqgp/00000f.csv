@@ -4,4 +4,7 @@
 "0","             method = ""lm"", se = FALSE, size = 1, colour=""blue"") + "
 "0","  stat_smooth(aes(y = Prediction, x = yield_hg_per_ha), "
 "0","              method = ""lm"", se = FALSE, size = 1, colour=""red"") +"
-"0","  theme_bw()"
+"0","  theme_minimal() +"
+"0","  labs(title = ""Observed vs. Predicted Yields"","
+"0","       x = ""Observed Yield (Hg/ha)"","
+"0","       y = ""Predicted Yield (Hg/ha)"")"

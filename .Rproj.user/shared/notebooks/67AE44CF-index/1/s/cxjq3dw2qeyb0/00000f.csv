@@ -1,0 +1,7 @@
+"0","ggplot(treeTest_with_results, aes(d = as.numeric(Event), m = as.numeric(estimate))) + "
+"0","  geom_roc(n.cuts = 50, labels = FALSE) + "
+"0","  style_roc(theme = theme_grey) +"
+"0","  geom_abline(slope = 1, intercept = 0, size = 1.5, color = 'grey')+"
+"0","  theme_bw()+"
+"0","  labs(title = ""ROC Curve"")"
+"0",""

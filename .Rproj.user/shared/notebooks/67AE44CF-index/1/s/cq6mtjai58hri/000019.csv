@@ -1,0 +1,7 @@
+"0","ggplot()+"
+"0","  geom_sf(data = homes %>%"
+"0","            sample_n(1000), aes(color = sale_price),"
+"0","          alpha = 0.5, shape = 16, size = 1, show.legend = TRUE)+"
+"0","  scale_color_gradient(low = ""#FFCCCC"", high = ""#990000"", name = ""Sale Price"") +  # Light red to dark red"
+"0","  theme_minimal()"
+"0",""

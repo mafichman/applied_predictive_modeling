@@ -571,7 +571,11 @@ summary(reg_logit)
 
 ```
 
-The coefficients show the strength and direction of the relationship. They are interpretable in terms of the "log odds" of the dependent variable being a "1". This is not very useful when you are trying to understand relationships, so you can exponentiate the coeffecients to "un-log" them and just get plain "odds".
+The **coefficients show the strength and direction of the relationship**. They are interpretable in terms of the "log odds" of the dependent variable being a "1". This is not very useful when you are trying to understand relationships, so you can exponentiate the coeffecients to "un-log" them and just get plain "odds". (see the outputs below)
+
+So for example, if the exponentiated coefficient was 1.14, you'd say "All else equal, on average, the odds of a tree dying increase by 14% with a unit change in the independent variable."  
+
+If you have a fixed effect, you are comparing the odds between the levels of that fixed effect, "All else equal, on average, the odds of a tree of species A_____ dying are X times that of tree of species B"
 
 You can try that here:
 
@@ -590,12 +594,9 @@ exp_coef %>%
 
 ```
 
-So for example, you'd say "All else equal, on average, the odds of a tree dying increase by x% (e.g. 1.14 is 14%) with a unit change in the independent variable."  If you have a fixed effect, you are comparing the odds between the levels of that fixed effect, "All else equal, on average, the odds of a tree of species A_____ dying are X times that of tree of species B"
+The **p-values** are similar to those from OLS - they represent the probability that the coefficient's value is significantly different from zero - basically, our confidence the in the coefficient estimate.
 
-
-The p-values are similar to those from OLS - they represent the probability that the coefficient's value is significantly different from zero - basically, our confidence the in the coefficient estimate.
-
-The McFadden R-Squared is a "pseudo R Squared" in that it doesn't tell us the same thing as R-squared from OLS (the amount of variance in the DV that's explained by the model) but it's a useful diagnostic of model quality. Closer to 1 is stronger. That said, we are interested in predictive accuracy and generalizability, not so much in R-squared.
+The **McFadden R-Squared** is a "pseudo R Squared" in that it doesn't tell us the same thing as R-squared from OLS (OLS R-squared describes the amount of variance in the DV that's explained by the model) but it's a useful diagnostic of model quality. Closer to 1 is stronger. That said, we are interested in predictive accuracy and generalizability, not so much in R-squared.
 
 ## 3.4. Training and Testing
 
@@ -790,7 +791,17 @@ homes <- st_read("https://raw.githubusercontent.com/mafichman/applied_predictive
   st_transform(4326)
 
 ```
+These are spatial data, we can use the `sf` package and `ggplot` to map them.
 
+```{r}
+ggplot()+
+  geom_sf(data = homes %>%
+            sample_n(1000), aes(color = sale_price),
+          alpha = 0.5, shape = 16, size = 1, show.legend = TRUE)+
+  scale_color_gradient(low = "#FFCCCC", high = "#990000", name = "Sale Price") +  # Light red to dark red
+  theme_minimal()
+
+```
 
 We can make a very basic hedonic model using bedrooms, bathrooms, year built, and total livable area to see how much variance our basic predictors explain in the dependent variable `sale_price`.
 

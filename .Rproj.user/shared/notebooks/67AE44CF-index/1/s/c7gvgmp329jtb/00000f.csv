@@ -1,0 +1,5 @@
+"0","exp_coef <- reg_logit$coefficients %>%"
+"0","  as.data.frame() %>%"
+"0","  rename(coefficient = ""."") %>%"
+"0","  mutate(exponentiated = exp(coefficient))"
+"0",""

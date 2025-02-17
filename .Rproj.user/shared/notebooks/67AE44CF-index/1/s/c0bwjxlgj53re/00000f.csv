@@ -1,0 +1,7 @@
+"0",""
+"0","treeTest_with_results <-"
+"0","  treeTest %>%"
+"0","  mutate(estimate = predict(logit_train, .,  type=""response""),"
+"0","         prediction = as.factor(ifelse(estimate >= 0.4, 1, 0)))"
+"0","  "
+"0",""
