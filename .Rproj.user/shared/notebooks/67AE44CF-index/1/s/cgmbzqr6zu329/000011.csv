@@ -1,0 +1,1 @@
+"0","yield_df <- read_csv(""https://raw.githubusercontent.com/mafichman/applied_predictive_modeling/refs/heads/main/data/yield_df_clean.csv"")"

@@ -1,0 +1,5 @@
+"0","reg.training_1 <- "
+"0","  lm(data = yield_training, "
+"0","     yield_hg_per_ha ~ average_rain_fall_mm_per_year + "
+"0","                       avg_temp + pesticides_tonnes + Item + yield_last_year)"
+"0",""

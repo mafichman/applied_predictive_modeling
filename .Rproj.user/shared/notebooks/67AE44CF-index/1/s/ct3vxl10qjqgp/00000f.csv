@@ -1,0 +1,7 @@
+"0","ggplot(yield_test_with_results)+"
+"0","  geom_point(aes(y = Prediction, x = yield_hg_per_ha))+"
+"0","  stat_smooth(aes(y = yield_hg_per_ha, yield_hg_per_ha), "
+"0","             method = ""lm"", se = FALSE, size = 1, colour=""blue"") + "
+"0","  stat_smooth(aes(y = Prediction, x = yield_hg_per_ha), "
+"0","              method = ""lm"", se = FALSE, size = 1, colour=""red"") +"
+"0","  theme_bw()"

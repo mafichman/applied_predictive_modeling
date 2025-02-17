@@ -1,0 +1,6 @@
+"0","yield_test_with_results %>%"
+"0","  group_by(Item) %>%"
+"0","  summarize(MAPE = mean(Abs_Pct_Error),"
+"0","         MAE = mean(AbsError)) %>%"
+"0","  kable() %>%"
+"0","  kable_styling()"

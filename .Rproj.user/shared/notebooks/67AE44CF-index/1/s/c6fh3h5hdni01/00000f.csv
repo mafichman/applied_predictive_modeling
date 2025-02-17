@@ -1,0 +1,6 @@
+"0","yield_test_with_results <-"
+"0","  yield_test %>%"
+"0","  mutate(Prediction = predict(reg.training_1, yield_test),"
+"0","         Error = Prediction - yield_hg_per_ha,"
+"0","         AbsError = abs(Prediction - yield_hg_per_ha),"
+"0","         Abs_Pct_Error = (abs(Prediction - yield_hg_per_ha)) / yield_hg_per_ha)"

@@ -1,0 +1,4 @@
+"0",""
+"0","reg1 <- lm(data = yield_df, "
+"0","           yield_hg_per_ha ~ "
+"0","             average_rain_fall_mm_per_year + avg_temp + pesticides_tonnes)"
