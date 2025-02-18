@@ -403,6 +403,8 @@ We can see if there is something systematic about our errors by plotting the obs
 
 We do a very good job predicting these yields, but we can see that our errors are larger at higher yields - we seldom predict those observations accurately.
 
+A note about generalizability, and flexibility - since we used the lag values (e.g. last year's yield) of each crop/country combination - we saw that rainfall and pesticides were not significant in our model, which is strongly driven by the correlation between yield and last year's yield. This means that our model is probably not flexible enough to predict next year's yield as affected by a big change in rainfall. If your "use case" involves making weather-dependent predictions, maybe this isn't a good model for you!
+
 ```{r, message = FALSE, warning = FALSE}
 ggplot(yield_test_with_results)+
   geom_point(aes(y = Prediction, x = yield_hg_per_ha))+
@@ -418,12 +420,11 @@ ggplot(yield_test_with_results)+
 
 # 3. Binary Logistic Regression for Classification
 
-Binary logistic regression, or "logit" is different from OLS modeling because it is designed to estimate binary outcomes. Specifically, it estimates the probability of a combination of variables you stick in a model predicts a "1" or a "0".
+Binary logistic regression, or "logit" is different from OLS modeling because it is designed to estimate binary outcomes. Specifically, if you have an outcome with two levels (say 0 and 1), it can estimate the odds that your combination of independent variables predicts the dependent variable to be a "1".
 
 It does this by fitting an s-shaped function to 0/1 data, unlike OLS, which fits a linear function to continuous data.
 
 The tricky part is that you end up with predictions that range from 0-1, and you need to figure out what threshold to use to classify your predictions, which may be values like 0.7 or 0.35, as "1" or "0".
-
 
 ```{r, message = FALSE, echo = FALSE}
 
@@ -635,7 +636,7 @@ logit_train <- glm(data = treeTrain, Event ~ Light_ISF + NSC + Lignin + Phenolic
 
 We `mutate` a new column in our `treeTest` test set that contains our estimates. We use the `predict` function to do this.
 
-`predict` takes a few arguments - our model `logit_train`, and a data set, `treeTest`.
+`predict` takes a few arguments - our model `logit_train`, and a data set, `treeTest`. We set the `type` to equal `"response"` to output exponentiated values (e.g. the probabilities, not the "log odds").
 
 Our model only knows how to make predictions for a data frame that contains the exact same information it has "seen" when we trained it with`treeTrain` - so your test set has to have exactly the same columns - same names, same data types - for this to work.
 
@@ -647,7 +648,7 @@ treeTest_with_results <-
 
 ```
 
-The predictions are not 1's and 0's, they fall in the range 0-1 - they are probabilities of the outcome being 0 or 1.
+The predictions are not 1's and 0's, they fall in the range 0-1 - they are odds of the outcome being 0 or 1.
 
 We need to classify them according to some threshold - above that threshold, we will classify it a 1, below we will classify it a 0.
 
