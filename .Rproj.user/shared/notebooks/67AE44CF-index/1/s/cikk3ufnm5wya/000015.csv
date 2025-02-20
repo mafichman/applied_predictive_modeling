@@ -1,5 +1,5 @@
 "0","as.data.frame(cbind(c(""OLS"", ""Logit"", ""Poisson""), c(""Continuous"", ""Binary"", ""Counts""), c(""Home Prices"", ""Inspection Pass/Fail of Restaurants"", ""Inspection Violations by Neighborhood""))) %>%"
-"0","  rename(""Model Type"" = V1,"
+"0","  dplyr::rename(""Model Type"" = V1,"
 "0","         ""DV Type"" = V2,"
 "0","         ""DV Example"" = V3) %>%"
 "0","  kable() %>%"

@@ -48,11 +48,11 @@ You can use this document in two ways. You can read along and look at the code, 
 
 ## 1.1. Explanation versus Prediction
 
-You very often see regression models used in scholarly papers to show the "effect of A on B" or the "association between A and B"... "all else equal." In a public policy or planning context, causal and associative applications of regression are very useful for measuring policy effects or understanding social scientific relationships in a statistical framework. This is NOT what we are going to do. You will not hear any "A causes B" in this text.  Furthermore, we are not trying to use controls to isolate the associations between A and B, "all else equal." What this means is that we are going to violate some assumptions (e.g. the "rules") that will make econometric users of regression absolutely cringe.
+You very often see regression models used in scholarly papers to show the "effect of A on B" or the "association between A and B"... "all else equal." In a public policy or planning context, causal and associative applications of regression are very useful for measuring policy effects or understanding social scientific relationships in a statistical framework. *This is NOT what we are going to do*. You will not hear any "A causes B" in this text. Furthermore, we are not trying to isolate the associations between A and B, "all else equal." What this means is that we are going to violate some assumptions (e.g. the "rules") that you will learn in most stats courses, which use these models for *explanation*.
 
-We are going to use regression models for a different purpose - to estimate outcomes (dependent variables) given a bunch of predictors (independent variables). To give you an example of the difference in approach, if I want to estimate the heights of a number of people, I could do so very accurately if I fed a regression model information about their wingspans. However, that can't tell me anything about WHY a person is so tall.
+We are going to use regression models for a different purpose - to make precictions, or forecasts. This means we will estimate outcomes (dependent variables) using a bunch of predictors (independent variables). To give you an example of the difference in approach, if I want to estimate the heights of a number of people, I could do so very accurately if I fed a regression model information about their wingspans. However, that can't tell me anything about WHY a person is so tall.
 
-The key to making above average predictive models is finding good independent variables and harnessing the power of their correlation with the dependent variable to make predictions. They key to making great predictive models is "engineering" good "features" to make models that are both accurate and flexible.
+The key to making *above average* predictive models is finding good independent variables and harnessing the power of their correlation with the dependent variable to make predictions. They key to making *great* predictive models is "engineering" good "features" to make models that are both accurate and flexible.
 
 ## 1.2. Model Types
 
@@ -64,7 +64,7 @@ There are other models for different outcome types not covered here, including P
 
 ```{r , echo=FALSE}
 as.data.frame(cbind(c("OLS", "Logit", "Poisson"), c("Continuous", "Binary", "Counts"), c("Home Prices", "Inspection Pass/Fail of Restaurants", "Inspection Violations by Neighborhood"))) %>%
-  rename("Model Type" = V1,
+  dplyr::rename("Model Type" = V1,
          "DV Type" = V2,
          "DV Example" = V3) %>%
   kable() %>%
@@ -74,7 +74,11 @@ as.data.frame(cbind(c("OLS", "Logit", "Poisson"), c("Continuous", "Binary", "Cou
 
 ## 1.3. How Do Predictive Models "Work?"
 
-These models are built around a simple framework - making a "best fit" line through your data. You've certainly seen an x-y scatterplot with a fitted line plotted through the middle. This is actually a simple regression model. Our models fit functions that predict the value of Y for a given X. Functionally, it minimizes the distance between the observations (the error) and the best fit line.
+These models are built around a simple framework - making a *"best fit"* line through your data. You've certainly seen an x-y scatterplot with a fitted line plotted through the middle (see the figure below). This is actually a simple regression model. 
+
+Our models fit functions that minimizes the distance between the observations (the error) and the best fit line. We draw our predictions from this "best fit" line - what is the value of Y for a given X?
+
+Each of the models in this text apply a different fitted function to your data, but in the end, the predictive functionality is similar - they all output the "average" estimate given all the independent predictor variables in the model.
 
 ```{r message=FALSE, echo=FALSE}
 
@@ -98,21 +102,19 @@ ggplot(data, aes(x = x, y = y)) +
 
 ```
 
-Each of the models in this text apply a different fitted function to your data, but in the end, the predictive functionality is similar - they all output the "average" estimate given all the independent predictor variables in the model.
-
 ## 1.4 How Do You Assess Model Performance?
 
-How do you know if your predictive model is doing a good job? We do this by "validating" the model. We hold out a sample of data where we know the actual outcome, and see if our model can accurately estimate the outcome.
+How do you know if your predictive model is doing a good job? We do this by **"validating" the model** - using our model to predict for observations where we *know* the outcomes, and can compare its performance to real-life observations. If we are doing this well, we can feel confident about using our model to make forecasts.
 
-We can split our data. We "train" our model using a portion of our data, and hold out a "test" set with all the same characteristics. When we "show" our model the independent variables from our test set, we can make predictions
+In practice, we do this by using *training* and *testing* data. We set aside a subset of our data we call the **test set**, say, 25% of our data. We **train* a model with the remaining 75%. We then make predictions for our 25% test set, and see if our our model can accurately estimate the outcome.
 
-We will have a few ways to judge that:
+**We will have a few ways to judge performance:**
 
 - Is the model accurate on unseen data? Are the predictions close to the known values in our test set?
 
-- Does the model performance generalize across contexts? Do we have big errors with some particular category of observation and small ones with another?
+- Does the model work well across contexts? Do we have big errors with some particular category of observation and small ones with another?
 
-The "error metrics" vary depending on what type of model you are using, as we will see.
+The metrics used to judge model quality depend on what type of model you are using, as we will see.
 
 ## 1.5. R Packages
 
@@ -147,13 +149,13 @@ library(plotROC)
 
 # 2. Ordinary Least Squares Linear Regression
 
-OLS regression, or multiple linear regression, is a simple model that can estimate the value of a continuous outcome - like prices or quantities. It is simple, interpretable, and widespread. You have almost certainly seen this kind of model in a two-variable scenario, where a line is fitted to a cloud of points (like in the last section). Imagine a multi-dimensional cloud of points with a fitted line - that's essentially what multiple linear regression does.
+OLS regression, or multiple linear regression, is a simple model that can estimate the value of a *continuous* outcome - like prices or quantities. It is simple, interpretable, and widespread. You have almost certainly seen this kind of model in a two-variable scenario, where a line is fitted to a cloud of points (like in the last section). Imagine a multi-dimensional cloud of points with a fitted line - that's essentially what multiple linear regression does.
 
 ## 2.1. Data set
 
 We are going to use a [data set from the World Bank](https://www.kaggle.com/datasets/patelris/crop-yield-prediction-dataset?select=yield.csv) to see if we can predict national crop yields. This data set consists of agricultural yields for many types of crops in over 100 countries. There is accompanying info about yearly rainfall and temperature. I have cleaned these data a bit to consist only of a few years. 
 
-Let's say we are interested in food system planning, and we want to be able to predict the yield (weight per hectre) for several crop types - maize, wheat, etc.,
+Let's say we are interested in food system planning, and **we want to be able to predict the yield (weight per hectre) for several crop types in multiple countries** - maize, wheat, etc.,
 
 We can load our data from a URL where it is hosted on github:
 
@@ -280,15 +282,17 @@ Only a little bit. We want to know whether these variables in this model predict
 
 ## 2.4. Fixed Effects
 
-It would stand to reason that the model "knowing" what country and crop type you're predicting would help. Some countries are probably easier than other to grow certain kinds of crops. Our exploratory analysis told us that yields vary a lot across crop and country.
+It would stand to reason that the model "knowing" what country and crop type you're predicting would help make a more accurate prediction. Our exploratory analysis told us that yields vary a lot across crop and country.
 
-Let's add a "categorical" variable to our model - `Item` - aka crop type.
+Let's add a *"categorical" variable* to our model - `Item` - aka crop type. When you add a categorical variable, like crop type, it's known as a *"fixed effect" or a "dummy variable"*.
 
-When you add a categorical variable, like country (the variable `Area`), it's known as a "fixed effect" or a "dummy variable" - where each category is given it's own line item in the regression summary, complete with an estimate. One level of the fixed effect is not represented in the summary - so there's one country you don't see here. Each estimate and p-value relates to that "base case" hold out.
+Let's create a new regression, called `reg2`, and examine the model summary.
 
-Let's create a new regression, called `reg2`. In this regression - each coefficient represents the unit change in crop yield associated with being Maize relative to being in Cassava (the hold out category).
+Each category level (e.g. Maize) has it's own line item in the regression summary. One level of the fixed effect is not represented in the summary - so there's one crop you don't see in the summary (Cassava). The statistics for each level relate to that "base case" hold out. 
 
-Adding this fixed effects made our R-Squared go wayyyy up - if we know the rainfall, crop and pesticide application, we can explain almost 60% of the variance in crop yields. Pretty good - but again - R-squared is not the metric we care about the most.
+In this regression - each coefficient can be interpreted like so - *"all else equal, the average Maize crop yield is 85,630 hg/hectare lower than Cassava."*. The negative sign means a lower yield.
+
+Adding these fixed effects made our R-Squared go wayyyy up - if we know the rainfall, crop and pesticide application, we can explain almost 60% of the variance in crop yields. Pretty good - but again - R-squared is not the metric we care about the most.
 
 ```{r}
 
@@ -300,9 +304,11 @@ summary(reg2)
 
 ```
 
-We saw there is a very strong relationship between yield and `yield_last_year` - what if we took the country out of the model, and put this in.... wow. That's a very strong predictor and a very high R-squared.
+We saw there is a *very* strong relationship between yield and `yield_last_year`. Let's see what happens if we put this in a new model called `reg3`. 
 
-You can see that it knocks rainfall, temperature and pesticides out of the model in terms of significance (p-values). This is because these things are "co-linear" with `yield_last_year`. Co-linearity is a sign that the coefficient values are not very reliable when these variables are in the model together. This is a major way that prediction and explanation are very different when you use OLS models - we are violating some important statistical assumptions in exchange for predictive ability.
+Check out the model summary. We now have a *very* high R-squared.
+
+Now, rainfall, temperature and pesticides do not have low p-values. They offer very little predictive power compared to last year's yields. This is exciting, *our model seems very powerful, but it's worth considering the downside* - if we believe that rainfall has an effect on plant productivity, and we want to use this model to forecast yields in a sudden drought, it might not do a good job, because its power is based mostly on year-to-year trends.
 
 ```{r}
 
@@ -316,13 +322,21 @@ summary(reg3)
 
 ## 2.5. Training and Testing
 
-OK, now let's set up a prediction workflow. We do this by cutting up our data into a "training" and "testing" set - we "train" the model on one set, and then use it to predict on the "test" set where we know the yields already. The difference between the observed and predicted yields is our error.
+OK, now let's set up a prediction workflow. We cut up our data into a "training" and "testing" set - we "train" the model on one set, and then use it to predict on the "test" set where we know the yields already. The difference between the observed and predicted yields is our error.
 
 ### 2.5.1. Splitting our Data
 
-We use the `set.seed` command to generate a random number sequence. We then use the `createDataPartition` command from the `caret` package to split our data. The `p` argument takes a number - here we say `.70` to indicate that we want 70% of our data in the training set. There's no set rule for the split size. The `paste` command is where we specify categorical variables - we want to make sure that single observations of categories end up in our test set. Why? If we train a model and it hasn't "seen" one of our countries, and then we "show" it that country in the test set, it won't be able to make a prediction for it.
+Here is the splitting procedure using the `caret` package:
 
-We create two data frames - `yield_training` and `yield_test`
+-We use the `set.seed` command to generate a random number sequence. 
+'
+-We then use the `createDataPartition` command from the `caret` package to split our data. 
+
+-The `p` argument takes a number - here we say `.70` to indicate that we want 70% of our data in the training set. There's no set rule for the split size. 
+
+-The `paste` command is where we specify categorical variables - we want to make sure that single observations of categories end up in our test set. Why? If we train a model and it hasn't "seen" one of our countries, and then we "show" it that country in the test set, it won't be able to make a prediction for it.
+
+-This process creates two data frames, which we name `yield_training` and `yield_test`
 
 ```{r}
 set.seed(1234)
@@ -356,7 +370,7 @@ Our model only knows how to make predictions for a data frame that contains the 
 
 We want to know how much our predictions missed the mark - in absolute and percentage terms.
 
-Here we create a new data frame called `yield_test_with_results`, we take `yield_test` and mutate some new columns - our `Prediction`, an `Error` that equals prediction minus actual, and measures of Absolute Error (`AbsError`) and Absolute Percent Error (`Abs_Pct_Error`) for each observation in the test set.
+Here we create a new data frame called `yield_test_with_results`, we take `yield_test` and mutate some new columns - our `Prediction`, an `Error` that equals prediction minus actual, and measures of **Absolute Error** (`AbsError`) and **Absolute Percent Error** (`Abs_Pct_Error`) for each observation in the test set.
 
 ```{r}
 yield_test_with_results <-
@@ -370,9 +384,11 @@ yield_test_with_results <-
 
 ## 2.5.4. Accuracy and Generalizeability
 
-To assess accuracy, we can summarize our errors - what is our Mean Absolute Percentage Error (MAPE)? What is our Mean Absolute Error (MAE)? This is very useful because it puts our errors into understandable terms - how much did we miss by? Easier to explain than R-squared!
+**This is a critical step - we create some metrics that we use to assess model quality.**
 
-Not bad! On average, we can predict yearly crop yields within 13%.
+To assess accuracy, we can summarize our errors - what is our **Mean Absolute Percentage Error (MAPE)**? What is our **Mean Absolute Error (MAE)**? This is very useful because it puts our errors into *understandable terms* - how much did we miss by? Easier to explain than R-squared!
+
+Not bad! On average, our Mean Absolute Percentage Error tells us that we can predict yearly crop yields (on average) within ~14% of actual.
 
 
 ```{r}
@@ -384,9 +400,9 @@ yield_test_with_results %>%
 
 ```
 
-The last thing we want to do is see if our model is performing better or worse depending on the context. It would be good to know if we are making accurate predictions about, say, soybeans, but missing badly on maize.
+The last thing we want to do is see if our model is *performing better or worse depending on the context* - testing for *generalizability*. It would be good to know if we are making accurate predictions about, say, soybeans, but missing badly on maize.
 
-We can group our results by `Item` and summarize our errors by crop type. As you can see, there is some variability,.
+We can group our results by `Item` (`group_by`) and `summarize` our errors by crop type. As you can see, there is some variability.
 
 ```{r}
 yield_test_with_results %>%
@@ -398,8 +414,9 @@ yield_test_with_results %>%
 
 ```
 
+Are we doing a good job predicting for high yield observations *and* for low yield observations?
 
-We can see if there is something systematic about our errors by plotting the observed values against the predicted values. In the plot below, the blue line `y=x` represents a perfect prediction, where the observed and predicted value are the same, and the red line represents a line fitted to our predictions.
+We can see if there is something systematic about our errors by *plotting the observed values against the predicted value*s. In the plot below, the blue line `y=x` represents a perfect prediction, where the observed and predicted value are the same, and the red line represents a line fitted to our predictions.
 
 We do a very good job predicting these yields, but we can see that our errors are larger at higher yields - we seldom predict those observations accurately.
 
@@ -420,11 +437,17 @@ ggplot(yield_test_with_results)+
 
 # 3. Binary Logistic Regression for Classification
 
-Binary logistic regression, or "logit" is different from OLS modeling because it is designed to estimate binary outcomes. Specifically, if you have an outcome with two levels (say 0 and 1), it can estimate the odds that your combination of independent variables predicts the dependent variable to be a "1".
+**Binary logistic regression, or "logit"** is designed to **estimate binary outcomes**. If you have an outcome with two levels (say 0 and 1), it can estimate the odds that your combination of independent variables predicts the dependent variable to be a "1". You can use these estimates as a way to classify things.
 
-It does this by fitting an s-shaped function to 0/1 data, unlike OLS, which fits a linear function to continuous data.
+Let's say I have a bunch of observations about fruit - their color, their weight, their shape - and I want to classify them as: 
 
-The tricky part is that you end up with predictions that range from 0-1, and you need to figure out what threshold to use to classify your predictions, which may be values like 0.7 or 0.35, as "1" or "0".
+-`0` "It's not an apple"
+
+-`1` "It's an apple."
+
+**The model produces predictions that range from 0-1 - representing probabilities or odds**.  A combination of variables like "green", and "round" might produce a probability of 0.6 that "It's an apple." We determine a *threshold* to *classify* your predictions as "1" or "0". If our threshold was 0.5, we would say that yes, "this is an apple".
+
+The model works by fitting an s-shaped function to 0/1 data, like this:
 
 ```{r, message = FALSE, echo = FALSE}
 
@@ -459,9 +482,11 @@ ggplot(ex_data, aes(x = x, y = y)) +
 
 ## 3.1. Data set
 
-This is a data set about tree survival published [by the aptly named Wood et al](https://datadryad.org/stash/dataset/doi:10.5061/dryad.xd2547dpw) at Michigan State. These data consist of ~2700 observations of trees, whether they are dead or alive, and a list of traits of that tree and the immediate environment.
+For our modeling workflow example, we will use a data set about tree survival published [by the aptly named Wood et al](https://datadryad.org/stash/dataset/doi:10.5061/dryad.xd2547dpw) at Michigan State. These data consist of ~2700 observations of trees, whether they are dead or alive, and a list of traits of that tree and the immediate environment.
 
-The "use case" for our modeling example will be a forester who is interested in managing land for fire load and looking to target trees that they estimate are likely to be dead for removal and sale as timber product.
+We will try to *create a predictive classifier* that can estimate whether trees are dead or alive.
+
+**The "use case" for our modeling example will be a forester who is interested in targeting dead trees for removal and sale as timber product.**
 
 ```{r, message = FALSE, warning = FALSE}
 trees <- read_csv ("https://raw.githubusercontent.com/mafichman/applied_predictive_modeling/refs/heads/main/data/tree_morbidity.csv") %>%
@@ -473,7 +498,9 @@ trees <- read_csv ("https://raw.githubusercontent.com/mafichman/applied_predicti
 
 ## 3.2. Exploratory Analysis
 
-Let's take a look at our data set - our dependent variable is called `Event` - and it is binary. It's 1 if the tree is dead, and 0 if it's not.
+Let's take a look at our data set - **our dependent variable is called `Event`** - and it is binary. 
+
+It's 1 if the tree is dead, and 0 if it's not.
 
 We will take a similar approach as we did with OLS regression, examining variables in relation to one another and to the dependent variable.
 
@@ -486,7 +513,11 @@ glimpse(trees)
 
 ## 3.2.2. Comparing continuous predictors across levels
 
-We can use some simple `dplyr` logic to look at whether the mean values of our continuous variables tend to be different depending on whether our `Event` binary outcome is 1 or 0.
+We can use some simple `dplyr` logic to look at whether the our continuous variables differ depending on whether our `Event` binary outcome is 1 or 0.
+
+*If there is a difference, this means there is a possibility that our model can use this feature to differentiate between our 1's and 0's.*
+
+Let's compare the means of our continuous variables - do dead trees and live trees have differing values?
 
 At first glance, it looks like lower concentration of lignin and phenolics in the organism is associated with death, as is time (which is time from planting to harvesting).
 
@@ -830,15 +861,20 @@ ggplot(homes)+
 
 ```
 
-Let's reclassify homes into a few different categories - `new`, `victorian`, `mid-century`, `modern`, and `historic`.
+Let's reclassify homes into a few different categories - `new`, `victorian`, `mid-century`, `modern`, and `historic`. 
+
+The `case_when` function from `dplyr` is great for this.
 
 ```{r}
 
 homes <- homes %>%
   mutate(age_categorical = case_when(year_built <= 1880 ~ "historic",
-                                     year_built > 1880 & year_built <= 1920 ~ "victorian",
-                                     year_built > 1920 & year_built <= 1980 ~ "mid-century",
-                                     year_built < 1980 & year_built <= 2000 ~ "modern",
+                                     year_built > 1880 & 
+                                       year_built <= 1920 ~ "victorian",
+                                     year_built > 1920 & 
+                                       year_built <= 1980 ~ "mid-century",
+                                     year_built < 1980 & 
+                                       year_built <= 2000 ~ "modern",
                                      year_built > 2000 ~ "modern"))
 
 ```
