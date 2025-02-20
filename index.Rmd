@@ -226,7 +226,7 @@ cor.test(yield_df$yield_hg_per_ha, yield_df$pesticides_tonnes)
 
 ```
 
-### 2.2.4. Correlations - Categorical variables
+### 2.2.4. Categorical variables
 
 Let's examine how our dependent variable might vary from category to category.
 
@@ -537,9 +537,9 @@ ggplot()+
 
 ```
 
-Another approach worth trying is looking at the distributions of the different variables by making histograms that are split by 0/1 and by variable.
+Another approach worth trying is looking at the distributions of the continuous variables. Do the 1's look different from the 0's? We can examine this by making histograms.
 
-Using this approach I can see that amongst trees that die, lignin and phenolics and NSC seem to have right tailed distributions, and there's a discrete split at a certain value. We can also see that something seems kind of weird with the "Time" variable - maybe it represents two harvest periods.
+We can see that amongst trees that die, lignin and phenolics and NSC seem to have right tailed distributions, and there's a discrete split at a certain value. We can also see that something seems kind of weird with the "Time" variable - maybe it represents two harvest periods.
 
 ```{r, warning = FALSE, message = FALSE}
 trees %>% 
