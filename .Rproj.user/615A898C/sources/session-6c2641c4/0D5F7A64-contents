@@ -989,15 +989,15 @@ cor.test(homes$sale_price, homes$lagPriceSqFt)
 
 ## 4.4 Variable Transformations, Interactions and Other Techniques
 
-One of the core assumptions of regression modeling is that variables be normally distributed. With predictive modeling, we sometimes play fast and loose with assumptions, but the models do perform better when this is the case.
+One of the core assumptions of regression modeling is that independent variables have a linear relationship with the dependent variable. With predictive modeling, we sometimes play fast and loose with assumptions, but the models do perform better when this is the case.
 
 Here are some ways you can transform your variables and your data.
+
+**Transformation** - You can take variables that don't have a linear relationship with their predictors and transform them using log transformation. This is done very often with pricing models, where home prices are logged before modeling.
 
 **Normalization** - you can use rate statistics or ratios as your modeling yardsticks. In the above example, we used the k-nearest neighbor price-per-square-foot, so that the size of nearby homes is not biasing our "comps" variable.
 
 **Standardization** - you can recenter your variables in a normal distribution centered on zero. Linear regression functions better with normally distributed variables.
-
-**Transformation** - You can take variables that aren't normally distributed and transform them using log transformation. This is done very often with pricing models, where home prices are logged before modeling.
 
 **Outlier Removal** - Are we concerned that a few unusual cases are making it harder for our model to perform well? Throwing away outliers can help our model training process.
 
@@ -1007,9 +1007,9 @@ A last engineering technique is to "interact" variables.
 
 # 5. Model Cross-Validation
 
-We made one training and testing split - but that might mean that our accuracy is an artifact of the training data we had, or the test data we used to validate it the first time.
+We made one training and testing split - but that might mean that our accuracy is an artifact of the training data we had, or the test data we used to validate it the first time. When we are selecting our "best" model, we might want to take a closer look at our model performance to make sure we didn't just get lucky on our accuracy in the train/test error estimates.
 
-A way to know if we had some dumb luck with our accuracy is to make many, many, training and testing set splits.
+A way to do this is to make many, many, random training and testing set splits - a group of processes called "cross-validation".
 
 This can be done with something called k-fold cross-validation, where we can make as many random splits as we want and train and test models. 
 
