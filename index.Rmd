@@ -997,7 +997,7 @@ Here are some ways you can transform your variables and your data.
 
 **Normalization** - you can use rate statistics or ratios as your modeling yardsticks. In the above example, we used the k-nearest neighbor price-per-square-foot, so that the size of nearby homes is not biasing our "comps" variable.
 
-**Standardization** - you can recenter your variables in a normal distribution centered on zero. Linear regression functions better with normally distributed variables.
+**Standardization** - you can recenter your variables in a normal distribution centered on zero.
 
 **Outlier Removal** - Are we concerned that a few unusual cases are making it harder for our model to perform well? Throwing away outliers can help our model training process.
 
